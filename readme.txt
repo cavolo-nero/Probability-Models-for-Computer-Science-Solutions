@@ -1,1 +1,1 @@
-These solutions are _not_ official and were typed by a student in the hopes that they would be useful to other students. Take each solution, then, with appropriate scepticism.
+These are _unofficial_ solutions to Probability Models for Computer Science (ISBN: 0125980515) and were typed by a student in the hopes that they would be useful to other students. Take each solution, then, with appropriate scepticism.
