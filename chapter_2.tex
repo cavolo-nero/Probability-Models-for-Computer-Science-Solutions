@@ -2,6 +2,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[a4paper]{geometry}
+\usepackage{nicefrac}
 \DeclareMathOperator{\Cov}{Cov}
 \DeclareMathOperator{\Var}{Var}
 \title{Solutions to Chapter 2 of Sheldon M. Ross' \textit{Probability Models For Computer Science}}
@@ -29,12 +30,11 @@
     \item
         \[\begin{split}
             P_1     & = 1 \\
-            P_2     & = p \\
-            P_3     & = 1 - q^2 - 2pq^2 \\
-            P_4     & = 1 - 2q^3 - 3pq^4 + 2pq^5 \\
-            P_5     & = 1 - 5q^4 - 6q^6 - 4pq^6 + 8q^7 + 6q^8 + 12pq^8 - 8pq^9 \\
-            P_6     & = 1 - 6q^5 - 10q^8 - 5pq^8 + 15q^9 + 60q^{11} \\
-                    & \qquad + 40pq^{11} - 40q^{12} + 30pq^{12} - 30q^{13} - 80pq^{13} + 40pq^{14} \\
+            P_2     & = 1 - q \\
+            P_3     & = 1 - 3q^2 + 2q^3 \\
+            P_4     & = 1 - 4q^3 - 3q^4 + 12q^5 - 6q^6 \\
+            P_5     & = 1 - 5q^4 - 10q^6 + 20q^7 + 30q^8 - 60q^9 + 24q^{10} \\
+            P_6     & = 1 - 6q^5 - 15q^8 + 20q^9 + 120q^{11} - 90q^{12} - 270q^{13} + 360q^{14} - 120q^{15}
         \end{split}\]
     \end{enumerate}
 \item
@@ -44,39 +44,33 @@
     Hence, for $n>0$, noting also that the pivot is selected uniformly at random among $n$ elements,
     \[\begin{split}
     M_n & = (n-1) + \sum_{i=1}^n \frac{1}{n} \left( M_{i-1} + M_{n-i} \right ) \\
-        & = (n-1) + \frac{1}{n} \left( \sum_{i=1}^n M_{i-1} + \sum_{i=1}^n M_{n-1} \right) \\
-        & = (n-1) + \frac{1}{n} \left( 2\sum_{i=1}^n M_{i-1} \right) \\
-        & = (n-1) + \frac{2}{n} \sum_{j=0}^{n-1} M_j \text.
+        & = n - 1 + \frac{1}{n} \left( \sum_{i=1}^n M_{i-1} + \sum_{i=1}^n M_{n-i} \right) \\
+        & = n - 1 + \frac{2}{n} \sum_{j=0}^{n-1} M_j \text.
     \end{split}\]
 
     Using base case $M_0=0$,
-    % TODO table would be prettier
-    \[\begin{split}
-    M_1 & = 0 \\
-    M_2 & = 1 \\
-    M_3 & = \frac{8}{3} \\
-    M_4 & = \frac{29}{6} \\
-    M_5 & = \frac{37}{5} \\
-    M_6 & = \frac{284}{25} \\
-    M_7 & = \frac{2413}{175} \\
-    M_8 & = \frac{24167}{1400} \text.
-    \end{split}\]
+    \begin{center}
+    $\begin{array}{c|cccccccc}
+        i & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+        \hline
+        M_i & 0 & 1 & \nicefrac{8}{3} & \nicefrac{29}{6} & \nicefrac{37}{5} & \nicefrac{103}{10} & \nicefrac{472}{35} & \nicefrac{2369}{140} \\
+    \end{array}$.
+    \end{center}
 \item
-    Let $C$ denote the number of comparisons,
-    let $R$ denote the number of remaining values in the nonempty pile when the other is first emptied
-    and suppose $n$ is positive.
+    Let $C$ denote the number of comparisons and
+    let $R$ denote the number of remaining values in the non-empty pile when the other is first emptied.
+    Suppose $n$ is positive.
 
-    Every comparison corresponds to a distinct removal of one value whilst both piles are nonempty.
-    Since there are $n$ values in total, the number of comparisons is $n-R$; $n$ less the number of
-    remaining values once one pile is emptied.
+    Every comparison corresponds to the removal of one value whilst both piles are non-empty.
+    Given there are $n$ values in total, and $R$ remaining values upon the first emptying of a pile,
+    there must have been $n-R$ comparisons.
 
-    Since the remaining values is some maximal suffix of the sorted sequence, $R$ is the number of sequential
-    values, in descending order from the largest value, that were allocated to the same pile. $R$ is
-    certainly at least $1$ since the largest value always remains in the nonempty pile and, noting that
-    all values were equally likely to be placed in either pile, the probability of at least $j+1$ remaining
-    values is half of the probability of at least $j$ remaining values, for $1 \leq j < n$.
-    Hence, for $1 \leq i \leq n$,
-    \[ P(R \geq i) = \left(\frac{1}{2}\right)^{i-1}\text. \]
+    It is clear that the remaining values is some maximal suffix of the sorted sequence.
+    Hence, $R$ is the number of sequential values, in descending order from the largest value, that were allocated to the same pile.
+    The largest value always remains in the non-empty pile, hence $R \geq 1$, and, noting that all values were equally
+    likely to be have been initially placed in either pile,
+    \[ P(R \geq i) = \left(\frac{1}{2}\right)^{i-1} \]
+    for $1 \leq i \leq n$.
 
     Using $E[X] = \sum_{i=1}^\infty P(X \geq i)$ for a non-negative random variable $X$,
     \[\begin{split}
@@ -87,14 +81,16 @@
             & = n - 2 + \left(\frac{1}{2}\right)^{n-1} \text.
     \end{split}\]
 \item
+    Define $Q_{i,j} = 1 - P_i - P_j$, the probability that neither $e_i$ nor $e_j$ are requested at a particular time.
+
     Let $I_{i,j}$ indicate the event that element $e_i$ precedes $e_j$ at time $n$.
     This event can occur if
     \begin{itemize}
-    \item neither $e_i$ nor $e_j$ were selected and $e_i$ initially preceded $e_j$,
-    which happens with probability $\frac{1}{2}\left(1-P_i-P_j\right)^n$ since each element is equally likely
+    \item  $e_i$ initially preceded $e_j$ and neither $e_i$ nor $e_j$ were selected,
+    which happens with probability $\frac{1}{2} \cdot Q_{i,j}^{n-1}$ since each element is equally likely
     to have preceded the other in the initial ordering; or
-    \item $e_j$ is not selected after $e_i$ is selected. Conditioning on the last selection of $e_i$, this occurs
-    with probability $\sum_{k=1}^n P_i\left(1-P_i-P_j\right)^{n-k}$.
+    \item $e_j$ is not selected after the last time $e_i$ is selected.
+    Conditioning on the time of the last selection of $e_i$, this occurs with probability $\sum_{k=1}^{n-1} P_i \cdot Q_{i,j}^{n-k-1}$.
     \end{itemize}
 
     Let $R_i$ denote the position of $e_i$ at time $n$.
@@ -104,12 +100,9 @@
     Conditioning on the element requested at time $n$, its expected value is
     \[\begin{split}
     E[R]    & = \sum_i P_i E[R_i] \\
-            & = \sum_i P_i + \sum_i P_i \sum_{j\neq i}E[I_{j,i}] \\
-            & = 1 + \sum_i P_i \sum_{j\neq i} \left( \frac{1}{2}\left(1-P_i-P_j\right)^n + P_j\sum_{k=1}^n \left(1-P_i-P_j\right)^{n-k} \right) \\
-            & = 1 + \sum_i  \frac{P_i}{2} \sum_{j\neq i}  \left(1-P_i-P_j\right)^n 
-                        + \sum_i \sum_{j\neq i}  P_i P_j \sum_{k=1}^n \left(1-P_i-P_j\right)^{n-k}  \text. \\
-            % & = 1 + \sum_i \sum_{j<i} \left( \frac{P_i+P_j}{2}\left(1-P_i-P_j\right)^n \right)
-            %             + \sum_i \sum_{j\neq i}  P_i P_j \sum_{k=1}^n \left(1-P_i-P_j\right)^{n-k} \text. \\
+            & = \sum_i P_i \left( 1 + \sum_{j \neq i}E[I_{j,i}] \right) \\
+            & = \sum_i P_i + \sum_i P_i \sum_{j \neq i} \left( \frac{1}{2} \cdot Q_{i,j}^{n-1} + \sum_{k=1}^{n-1} P_j \cdot Q_{i,j}^{n-k-1} \right) \\
+            & = 1 + \sum_i \sum_{j \neq i} \frac{1}{2} \cdot P_i \cdot Q_{i,j}^{n-1} + \sum_i \sum_{j \neq i} \sum_{k=1}^{n-1} P_i \cdot P_j \cdot Q_{i,j}^{n-k-1} \text.
     \end{split}\]
 \item
     Let $p_{i,j}$ denote the probability that $e_i$ precedes $e_j$, and $R$ the position of the requested element.
@@ -166,14 +159,11 @@
     \end{split}\]
     Then the variance is $\Var(F) = E[F^2] - E[F]^2 = 2 - 1^2 = 1$.
 \item
-    % TODO not particularly convincing
-    Let $j_1, ..., j_n$ be an arbitrary permutation of $1, ..., n$ and suppose $X$ is a random permutation.
-    Since each $j_i$ could represent a distinct index of the vector $X$, the probability of
+    Let $j_1, ..., j_n$ be an arbitrary permutation of $1, ..., n$.
+
+    Supposing $X$ is a random permutation, the probability of
     \begin{equation}\label{eq:randomperm}X(j_1)=1, ..., X(j_n)=n \end{equation}
-    is equal to the probability of
-    \[ \left(X(1),...,X(n)\right) = \left(k_1, ..., k_n\right) \]
-    where $k_1, ..., k_n$ is the permutation of $1, ..., n$ such that $k_i=X(i)$.
-    Since $X$ is a random permutation, this probability is $\frac{1}{n!}$.
+    is $\nicefrac{1}{n!}$.
     Equation \eqref{eq:randomperm} may be restated
     \[ j_1 = X^{-1}(1), ..., j_n = X^{-1}(n) \]
     so
@@ -201,24 +191,22 @@
             \end{cases} \text.
         \]
     \item
-        The probability that both $i$ and $j$ belong to a matched pair, for $i \neq j$, can be calculated by conditioning
-        on whether they belong to the same matched pair (i.e., $i$ chooses $j$'s hat and $j$ chooses $i$'s hat).
-
-        The probability $i$ and $j$ belong to the same matched pair is
+        For $i \neq j$, the probability $i$ and $j$ belong to the same matched pair (i.e., $i$ chooses $j$'s hat and $j$ chooses $i$'s hat) is
         \[ P(I_i=1,I_j=1,i \text{ and } j \text{ matched pair}) = \frac{1}{n}\frac{1}{n-1} \text. \]
 
         The probability that both $i$ and $j$ belong to matched pairs, but not the same, depends on $n$. If $n<4$,
         it is not possible for $i$ and $j$ to belong to distinct pairs. Otherwise, if $n \geq 4$, it
         is the probability that $i$ matches with some other than $j$, with probability $\frac{n-2}{n}\frac{1}{n-1}$,
-        and $j$ belongs to a matched pair amongst the remaining, with probability $\frac{1}{n-2}$. That is,
+        and $j$ belongs to a matched pair amongst the remaining, with probability $\frac{n-3}{n-2}\frac{1}{n-3}$.
+        Putting that together,
         \[ P(I_i=1,I_j=1,i \text{ and } j \text{ not matched pair}) =
                 \begin{cases}
                     0 & \text{if } 1 < n < 4 \\
-                    \frac{n-2}{n}\frac{1}{n-1}\frac{1}{n-2} & \text{otherwise}
+                    \frac{1}{n(n-1)} & \text{otherwise}
                 \end{cases} \text.
         \]
 
-        Hence, for $i \neq j$, summing the above expressions,
+        Hence, for $i \neq j$,
         \[ P(I_i=1,I_j=1) =
                 \begin{cases}
                     \frac{1}{n(n-1)} & \text{if } 1<n<4 \\
@@ -233,7 +221,7 @@
         E[P^2] - E[P]^2 & = E\left[\left(\frac{I_1 + ... + I_n}{2}\right)^2\right] - E[P]^2 \\
                         & = \frac{1}{4}\left( \sum_{i=1}^n E[I_i^2] + \sum_i\sum_{j \neq i}E[I_iI_j] \right) - \left(\frac{1}{2}\right)^2 \\
                         & = \frac{1}{4}\left( n\cdot\frac{1}{n} + \sum_i\sum_{j \neq i}P(I_i=1,I_j=1) \right) - \frac{1}{4} \\
-                        & = \frac{n(n-1)}{4}\cdot P(I_i=1,I_j=1) \text. \\
+                        & = \frac{1}{4}\sum_i\sum_{j \neq i}P(I_i=1,I_j=1) \text.
         \end{split}\]
 
         Hence,
@@ -253,18 +241,14 @@
             & = \frac{1}{n} \sum_{i \in S_n} Q_{n-i} \text. \\
         \end{split}\]
 
-    \item
-        Using base case $Q_0=1$,
-        \[\begin{split}
-        Q_1 & = 1 \\
-        Q_2 & = \frac{1}{2} \\
-        Q_3 & = \frac{1}{2} \\
-        Q_4 & = \frac{5}{8} \\
-        Q_5 & = \frac{5}{8} \\
-        Q_6 & = \frac{29}{48} \\
-        Q_7 & = \frac{29}{48} \\
-        Q_8 & = \frac{233}{384} \text.
-        \end{split}\]
+    Using base case $Q_0=0$,
+    \begin{center}
+    $\begin{array}{c|cccccccc}
+        i & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+        \hline
+        Q_i & 1 & \nicefrac{1}{2} & \nicefrac{1}{2} & \nicefrac{5}{8} & \nicefrac{5}{8} & \nicefrac{29}{48} & \nicefrac{29}{48} & \nicefrac{233}{384}
+    \end{array}$.
+    \end{center}
     \end{enumerate}
 \item
     Let $C_1$ denote the size of the cycle that contains $1$.
@@ -275,7 +259,7 @@
         M_n & = E[N] \\
             & = \sum_{i=1}^n E[N|C_1=i]\cdot P(C_1=i) \\
             & = \sum_{i=1}^n (1+M_{n-i})\cdot \frac{1}{n} \\
-            & = 1 + \frac{1}{n}\sum_{i=1}^n M_{n-i} \text.
+            & = 1 + \frac{1}{n}\sum_{j=0}^{n-1} M_j \text.
         \end{split}\]
     \item
         % TODO awful argument
@@ -292,21 +276,18 @@
         This result can be confirmed by induction to be the solution to the recurrence relation \eqref{eq:recurrenceM}.
 
         When $n=0$,
-        \[ M_0 = \sum_{i=1}^0 \frac{1}{i} = 0 \]
+        \[ M_0 = \sum_{j=0}^{-1} \frac{1}{j} = 0 \]
         as required.
 
         Suppose $M_i = \sum_{j=1}^i \frac{1}{j}$ for $0 \leq i \leq k$ and arbitrary integer $k$.
         The below shows that $M_{k+1}=\sum_{i=1}^{k+1} \frac{1}{i}$.
         \[\begin{split}
-            M_{k+1} & = 1 + \frac{1}{k+1}\sum_{i=1}^{k+1} M_{k+1-i} \\
-                    & = 1 + \frac{1}{k+1}\sum_{i=1}^{k} M_i \\
+            M_{k+1} & = 1 + \frac{1}{k+1}\sum_{i=0}^{k} M_i \\
                     & = 1 + \frac{1}{k+1}\sum_{i=1}^{k} \sum_{j=1}^i \frac{1}{j} \\
-                    & = 1 + \frac{1}{k+1}\sum_{1\leq j\leq i\leq k} \frac{1}{j} \\
                     & = 1 + \frac{1}{k+1}\sum_{j=1}^{k} \sum_{i=j}^k \frac{1}{j} \\
                     & = 1 + \frac{1}{k+1}\sum_{j=1}^{k} \frac{k-j+1}{j} \\
-                    & = 1 + \frac{1}{k+1}\sum_{j=1}^{k} \left(\frac{k+1}{j} - 1\right) \\
+                    & = 1 + \frac{1}{k+1}\sum_{j=1}^{k} \left(-1 + \frac{k+1}{j}\right) \\
                     & = 1 - \frac{k}{k+1} + \sum_{j=1}^k\frac{1}{j} \\
-                    % & = \frac{1}{k+1} + \sum_{j=1}^k\frac{1}{j} \\
                     & = \sum_{j=1}^{k+1}\frac{1}{j} \\
         \end{split}\]
     \item
