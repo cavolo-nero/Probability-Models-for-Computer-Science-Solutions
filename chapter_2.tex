@@ -324,5 +324,33 @@
                 & = \frac{1}{k}{n \choose k}^{-1} \text.\\
         \end{split}\]
     \end{enumerate}
+\item
+    Let $M$ denote the number of maximal increasing subsequences in a random permutation of $n$ values.
+    Let $I_j$ indicate that $j$ is the beginning of a maximal subsequence for $1 \leq j \leq n$.
+
+    The probability that $j$ begins a maximal increasing subsequence is independent of whether
+    $k$, for $k>j$, also begins a maximal increasing subsequence.
+
+    Hence, using the independence of $I_j$ and $I_k$ for $j \neq k$,
+    \[\begin{split}
+    \Var(M) & = \Var\left(\sum_j{I_j}\right) \\
+            & = \sum_j{\Var(I_j)} \\
+            & = \sum_j\left(E(I_j^2) - E(I_j)^2\right) \\
+            & = \sum_j{\left(\frac{1}{j} - \left(\frac{1}{j}\right)^2\right)} \\
+            & = \sum_j{\frac{j-1}{j^2}}\text.
+    \end{split}\]
+\item
+    Let $I_i$, for $i \leq i < n$ indicate that $X(i) < X(i+1)$ for a random permutation $X$.
+    Then, the number of rises in a random permutation of $n$ values is
+    \[ N = \sum_{i=1}^{n-1}{I_i}\text. \]
+    \begin{enumerate}
+    \item
+        \[\begin{split}
+        E[N]    & = \sum_{i=1}^{n-1}{E[I_i]} \\
+                & = \sum_{i=1}^{n-1}{P(X(i) < X(i+1))} \\
+                & = \sum_{i=1}^{n-1}\frac{1}{2} \\
+                & = \frac{n-1}{2}
+        \end{split}\]
+    \end{enumerate}
 \end{enumerate}
 \end{document}
