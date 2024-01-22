@@ -340,8 +340,8 @@
             & = \sum_j{\frac{j-1}{j^2}}\text.
     \end{split}\]
 \item
-    Let $I_i$, for $i \leq i < n$ indicate that $X(i) < X(i+1)$ for a random permutation $X$.
-    Then, the number of rises in a random permutation of $n$ values is
+    Let $I_i$, for $1 \leq i < n$ indicate that $X(i) < X(i+1)$ for a random permutation $X$.
+    Then, the number of rises in a random permutation of $n > 0$ values is
     \[ N = \sum_{i=1}^{n-1}{I_i}\text. \]
     \begin{enumerate}
     \item
@@ -351,6 +351,115 @@
                 & = \sum_{i=1}^{n-1}\frac{1}{2} \\
                 & = \frac{n-1}{2}
         \end{split}\]
+    \item
+        It is clear that a random permutation of $n < 2$ elements has no variance in the number of rises
+        since there are none. Consider instead the number of the rises in a random permutation of $n \geq 2$ elements.
+
+        A random permutation with consecutive rises at a given position has three numbers in increasing order,
+        of which there are ${n \choose 3}$ choices, with the remaining $n-3$ elements occurring in any order.
+        Hence, counting the number of permutations with consecutive rises at a given position, for $i < n-1$,
+        \[P(I_i=1, I_{i+1}=1) = \frac{{n \choose 3} (n-3)!}{n!} = \frac{1}{6}\text.\]
+
+        A random permutation with rises at two given non-adjacent positions has a pair of increasing numbers at
+        the first position, of which there are ${n \choose 2}$ choices, with another pair at the second position,
+        of which there are ${n-2 \choose 2}$ choices, and the remaining $n-4$ numbers occurring in any order.
+        Hence, counting the number of permutations with rises at two given non-adjacent positions,
+        for $j > i + 1$,
+        \[P(I_i=1, I_j=1) = \frac{{n \choose 2}{n-2 \choose 2}(n-4)!}{n!} = \frac{1}{4}\text. \]
+
+        Hence, for $n \geq 2$,
+        \[\begin{split}
+        E[N^2]  & = E\left[\left(\sum_{i=1}^{n-1}I_i\right)^2\right] \\
+                & = E\left[\sum_{i=1}^{n-1} I_i^2\ + 2\sum_{i=1}^{n-1}\sum_{j>i}^{n-1}I_iI_j\right] \\
+                & = \sum_{i=1}^{n-1}P(I_i=1) + 2\sum_{i=1}^{n-1}\sum_{j>i}^{n-1}P(I_i=1, I_j=1) \\
+                & = \frac{n-1}{2} + 2\sum_{i=1}^{n-2}\sum_{j=i+1}^{n-1}P(I_i=1, I_j=1) \\
+                & = \frac{n-1}{2} + 2\sum_{i=1}^{n-2}P(I_i = 1, I_{i+1} = 1) + 2\sum_{i=1}^{n-2}\sum_{j=i+2}^{n-1}P(I_i = 1, I_j = 1) \\
+                & = \frac{n-1}{2} + 2(n-2) \cdot \frac{1}{6} + (n-2)(n-3) \cdot \frac{1}{4}
+        \end{split}\]
+        so
+        \[\begin{split}
+        \Var(N) & = E[N^2] - E[N]^2 \\
+                & = \frac{n-1}{2} + \frac{n-2}{3} + \frac{(n-2)(n-3)}{4} - \left(\frac{n-1}{2}\right)^2 \\
+                & = \frac{n+1}{12}\text.
+        \end{split}\]
+    \end{enumerate}
+\item
+    Letting
+    \[ I_{i,j} =
+        \begin{cases}
+            1 & \text{if } p_i < p_j \\
+            0 & \text{otherwise}
+        \end{cases} \text,
+    \]
+    define the position of $i$ in the weighted random permutation $p_i = 1 + \sum_{j \neq i}I_{j,i} $.
+
+    \begin{enumerate}
+    \item
+    \[\begin{split}
+    E[p_i]  & = 1 + \sum_{j \neq i}E[I_{j,i}] \\
+            & = 1 + \sum_{j \neq i}P(I_{j,i}=1) \\
+            & = 1 + \sum_{j \neq i}\frac{\lambda_j}{\lambda_i + \lambda_j} \text.
+    \end{split}\]
+    \item
+    Given, for $i \neq j,k$ and $j \neq k$,
+    \[\begin{split}
+    P(I_{j,i}=1,I_{k,i}=1)  & = P(I_{j,i}=1, I_{k,i}=1 , I_{j,k} = 1) + P(I_{j,i}=1, I_{k,i}=1 , I_{j,k} = 0) \\
+                            & = \frac{\lambda_j}{\lambda_i+\lambda_j+\lambda_k}\cdot\frac{\lambda_k}{\lambda_i+\lambda_k}+\frac{\lambda_k}{\lambda_i+\lambda_j+\lambda_k}\cdot\frac{\lambda_j}{\lambda_i+\lambda_j} \\
+                            & =\frac{\lambda_j\lambda_k}{\lambda_i+\lambda_j+\lambda_k}\left(\frac1{\lambda_i+\lambda_k}+\frac1{\lambda_i+\lambda_j}\right)\text,
+    \end{split}\]
+
+    we have
+    \begin{eqnarray*}
+    &&
+    \sum_{j,k\ne i\atop k\ne j}\left(E\left[I_{j,i}I_{k,i}\right]-E\left[I_{j,i}\right]E\left[I_{k,i}\right]\right)
+    \\
+    &=&
+    \sum_{j,k\ne i\atop k\ne j}\left(\frac{\lambda_j\lambda_k}{\lambda_i+\lambda_j+\lambda_k}\left(\frac1{\lambda_i+\lambda_k}+\frac1{\lambda_i+\lambda_j}\right)-\frac{\lambda_j}{\lambda_i+\lambda_j}\cdot\frac{\lambda_k}{\lambda_i+\lambda_k}\right)
+    \\
+    &=&
+    \sum_{j,k\ne i\atop k\ne j}\left(\frac{\lambda_j\lambda_k}{(\lambda_i+\lambda_j)(\lambda_i+\lambda_k)}\left(\frac{2\lambda_i+\lambda_j+\lambda_k}{\lambda_i+\lambda_j+\lambda_k}-1\right)\right)
+    \\
+    &=&
+    \lambda_i\sum_{j,k\ne i\atop k\ne j}\frac{\lambda_j\lambda_k}{(\lambda_i+\lambda_j)(\lambda_i+\lambda_k)(\lambda_i+\lambda_j+\lambda_k)}
+    \end{eqnarray*}
+
+    and, together with
+    \begin{eqnarray*}
+    \sum_{j\ne i}\left(E\left[I_{j,i}^2\right]-E\left[I_{j,i}\right]^2\right)
+    &=&
+    \sum_{j\ne i}\left(E\left[I_{j,i}\right]-E\left[I_{j,i}\right]^2\right)
+    \\
+    &=&
+    \sum_{j\ne i}\left(E\left[I_{j,i}\right]\left(1-E\left[I_{j,i}\right]\right)\right)
+    \\
+    &=&
+    \sum_{j\ne i}\frac{\lambda_j}{\lambda_i+\lambda_j}\cdot\frac{\lambda_i}{\lambda_i+\lambda_j}
+    \\
+    &=&
+    \lambda_i\sum_{j\ne i}\frac{\lambda_j}{\left(\lambda_i+\lambda_j\right)^2}\text,
+    \end{eqnarray*}
+
+    we have
+    \begin{eqnarray*}
+    \Var(p_i)
+    &=&
+    \Var(p_i-1)
+    \\
+    &=&
+    \Var\left(\sum_{j\ne i}I_{j,i}\right)
+    \\
+    &=&
+    E\left[\left(\sum_{j\ne i}I_{j,i}\right)^2\right]- E\left[\sum_{j\ne i}I_{j,i}\right]^2
+    \\
+    &=&
+    \sum_{j,k\ne i\atop k\ne j}\left(E\left[I_{j,i}I_{k,i}\right]- E\left[I_{j,i}\right] E\left[I_{k,i}\right]\right)+\sum_{j\ne i}\left(E\left[I_{j,i}^2\right]-E\left[I_{j,i}\right]^2\right)
+    \\
+    &=&
+    \lambda_i\sum_{j\ne i}\frac{\lambda_j}{\lambda_i+\lambda_j}\left(\frac1{\lambda_i+\lambda_j}+\sum_{k\ne i,j}\frac{\lambda_k}{(\lambda_i+\lambda_k)(\lambda_i+\lambda_j+\lambda_k)}\right)\cite{4846976}\text.
+    \end{eqnarray*}
     \end{enumerate}
 \end{enumerate}
+
+\bibliography{chapter_2.bib}{}
+\bibliographystyle{plain}
 \end{document}
